@@ -90,7 +90,7 @@ namespace JpkWebGenerator.Pages // <-- Upewnij się, że poprawny namespace!
                 // --- Wywołanie Logiki Przetwarzania ---
                 Console.WriteLine("\nRozpoczynanie przetwarzania danych...");
                 await _dbWriter.EnsureTablesExistAsync();
-                await _dbWriter.ClearDataTablesAsync();
+               // await _dbWriter.ClearDataTablesAsync(); // CZYSZCZENIE
                 HeaderData headerData = _fileReader.ReadHeaderFile(headerTempPath);
                 List<PositionData> positionData = _fileReader.ReadPositionFiles(positionTempPaths);
                 Console.WriteLine("Wczytywanie plików zakończone.");
@@ -99,6 +99,12 @@ namespace JpkWebGenerator.Pages // <-- Upewnij się, że poprawny namespace!
                 Console.WriteLine("\nRozpoczynanie zapisu do bazy danych...");
                 headerId = await _dbWriter.InsertHeaderDataAsync(headerData, openingBalance);
                 Console.WriteLine($"Rekord nagłówka zapisany z ID: {headerId}");
+                Console.WriteLine($"Przypisywanie HeaderId={headerId} do {positionData.Count} pozycji...");
+                foreach (var pos in positionData)
+                {
+                    pos.HeaderId = headerId;
+                }
+
                 await _dbWriter.InsertPositionDataBulkAsync(positionData);
                 Console.WriteLine("Zapis do bazy danych zakończony.");
 

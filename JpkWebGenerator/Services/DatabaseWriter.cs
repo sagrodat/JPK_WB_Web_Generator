@@ -66,7 +66,7 @@ namespace JpkWebGenerator.Services // Upewnij się, że namespace pasuje
             IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'Positions') BEGIN
                 CREATE TABLE dbo.Positions (
                     PositionId INT IDENTITY(1,1) PRIMARY KEY, NrRachunku VARCHAR(34) NULL, Data DATE NULL, Kontrahent NVARCHAR(255) NULL,
-                    NrRachunkuKontrahenta VARCHAR(34) NULL, Tytul NVARCHAR(255) NULL, Kwota DECIMAL(18, 2) NULL, SaldoKoncowe DECIMAL(18, 2) NULL
+                    NrRachunkuKontrahenta VARCHAR(34) NULL, Tytul NVARCHAR(255) NULL, Kwota DECIMAL(18, 2) NULL, SaldoKoncowe DECIMAL(18, 2) NULL, HeaderId INT NOT NULL
                 ); PRINT 'Tabela Positions została utworzona.'; END;
             IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'ValidationErrors') BEGIN
                  CREATE TABLE dbo.ValidationErrors ( ErrorId INT IDENTITY(1,1) PRIMARY KEY, HeaderId INT NULL, TableName NVARCHAR(128) NOT NULL,
@@ -131,14 +131,14 @@ namespace JpkWebGenerator.Services // Upewnij się, że namespace pasuje
             Console.WriteLine($"Przygotowywanie {transactionsToInsert.Count} transakcji do zapisu...");
             var dataTable = new DataTable("PositionsType");
             // Definicja DataTable (bez zmian)
-            dataTable.Columns.Add("NrRachunku", typeof(string)); dataTable.Columns.Add("Data", typeof(DateTime)); dataTable.Columns.Add("Kontrahent", typeof(string)); dataTable.Columns.Add("NrRachunkuKontrahenta", typeof(string)); dataTable.Columns.Add("Tytul", typeof(string)); dataTable.Columns.Add("Kwota", typeof(decimal)); dataTable.Columns.Add("SaldoKoncowe", typeof(decimal));
-            foreach (var pos in transactionsToInsert) { dataTable.Rows.Add((object)pos.NrRachunku ?? DBNull.Value, pos.Data, (object)pos.Kontrahent ?? DBNull.Value, (object)pos.NrRachunkuKontrahenta ?? DBNull.Value, (object)pos.Tytul ?? DBNull.Value, pos.Kwota, (object)pos.SaldoKoncowe ?? DBNull.Value); }
+            dataTable.Columns.Add("NrRachunku", typeof(string)); dataTable.Columns.Add("Data", typeof(DateTime)); dataTable.Columns.Add("Kontrahent", typeof(string)); dataTable.Columns.Add("NrRachunkuKontrahenta", typeof(string)); dataTable.Columns.Add("Tytul", typeof(string)); dataTable.Columns.Add("Kwota", typeof(decimal)); dataTable.Columns.Add("SaldoKoncowe", typeof(decimal)); dataTable.Columns.Add("HeaderId", typeof(int));
+            foreach (var pos in transactionsToInsert) { dataTable.Rows.Add((object)pos.NrRachunku ?? DBNull.Value, pos.Data, (object)pos.Kontrahent ?? DBNull.Value, (object)pos.NrRachunkuKontrahenta ?? DBNull.Value, (object)pos.Tytul ?? DBNull.Value, pos.Kwota, (object)pos.SaldoKoncowe ?? DBNull.Value, pos.HeaderId); }
             using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
             using var bulkCopy = new SqlBulkCopy(connection);
             bulkCopy.DestinationTableName = "dbo.Positions";
             // Mapowania kolumn (bez zmian)
-            bulkCopy.ColumnMappings.Add("NrRachunku", "NrRachunku"); bulkCopy.ColumnMappings.Add("Data", "Data"); bulkCopy.ColumnMappings.Add("Kontrahent", "Kontrahent"); bulkCopy.ColumnMappings.Add("NrRachunkuKontrahenta", "NrRachunkuKontrahenta"); bulkCopy.ColumnMappings.Add("Tytul", "Tytul"); bulkCopy.ColumnMappings.Add("Kwota", "Kwota"); bulkCopy.ColumnMappings.Add("SaldoKoncowe", "SaldoKoncowe");
+            bulkCopy.ColumnMappings.Add("NrRachunku", "NrRachunku"); bulkCopy.ColumnMappings.Add("Data", "Data"); bulkCopy.ColumnMappings.Add("Kontrahent", "Kontrahent"); bulkCopy.ColumnMappings.Add("NrRachunkuKontrahenta", "NrRachunkuKontrahenta"); bulkCopy.ColumnMappings.Add("Tytul", "Tytul"); bulkCopy.ColumnMappings.Add("Kwota", "Kwota"); bulkCopy.ColumnMappings.Add("SaldoKoncowe", "SaldoKoncowe"); bulkCopy.ColumnMappings.Add("HeaderId", "HeaderId");
             try
             {
                 await bulkCopy.WriteToServerAsync(dataTable);

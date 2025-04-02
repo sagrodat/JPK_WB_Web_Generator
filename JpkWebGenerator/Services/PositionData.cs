@@ -11,6 +11,6 @@ namespace JpkWebGenerator.Services // Upewnij się, że namespace pasuje
         public string? Tytul { get; set; }
         public decimal? Kwota { get; set; }
         public decimal? SaldoKoncowe { get; set; }
-        // Usunięto: public DateTime ImportTimestamp { get; set; }
+        public int HeaderId { get; set; }
     }
 }
