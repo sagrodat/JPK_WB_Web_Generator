@@ -161,7 +161,7 @@ Serwis `DatabaseWriter` zarządza komunikacją z bazą MS SQL Server. Połączen
 
 # 5. Struktura Bazy Danych
 
-![db_diagram.png](db_diagram.png)
+![db_diagram.png](readme_photos/db_diagram.png)
 
 - **`dbo.Headers`:** Przechowuje główne dane identyfikacyjne podmiotu, rachunku oraz podsumowujące dla pojedynczego procesu generowania pliku JPK_WB.
 - **`dbo.Positions`:** Zawiera szczegółowe informacje o poszczególnych operacjach bankowych (transakcjach) powiązanych z konkretnym rekordem nagłówka.
@@ -200,31 +200,31 @@ Program został uruchomiony w przeglądarce na innym komputerze w sieci lokalnej
 
 ### 6.4.1 Ekran startowy
 
-![startowy.png](startowy.png)
+![startowy.png](readme_photos/startowy.png)
 
 ### 6.4.2 Załączanie plików
 
-![wyborpliku.png](wyborpliku.png)
+![wyborpliku.png](readme_photos/wyborpliku.png)
 
 ### 6.4.3 Widok załadowanych plików (podana liczba plików pozycyjnych)
 
-![zatwierdzonepliki.png](zatwierdzonepliki%201.png)
+![zatwierdzonepliki.png](readme_photos/zatwierdzonepliki%201.png)
 
 ### 6.4.4 Przetworzenie plików (wczytanie na sewer SQL i walidacja)
 
-![przetworzone pliki.png](przetworzone_pliki.png)
+![przetworzone pliki.png](readme_photos/przetworzone_pliki.png)
 
 ### 6.4.5 Generowanie i pobieranie pliku XML
 
-![pobranyxml.png](pobranyxml.png)
+![pobranyxml.png](readme_photos/pobranyxml.png)
 
 ### 6.4.6 (Dodatkowo) Widok błędu
 
-![blednyREGONinfo.png](blednyREGONinfo.png)
+![blednyREGONinfo.png](readme_photos/blednyREGONinfo.png)
 
 ### 6.4.7 (Dodatkowo) Widok szczegółów błędu
 
-![blednyREGONszczegoly.png](blednyREGONszczegoly.png)
+![blednyREGONszczegoly.png](readme_photos/blednyREGONszczegoly.png)
 
 # 7. Podsumowanie i Wnioski
 

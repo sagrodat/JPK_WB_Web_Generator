@@ -32,6 +32,9 @@ secrets.json
 # Dotnet local tool manifest file
 .config/dotnet-tools.json
 
+# Visual Studio specific folder
+.vs/
+
 # Local Test results
 TestResults/
 *.trx
@@ -40,16 +43,8 @@ TestResults/
 *.coverage
 *.coveragexml
 
-# VS Code specific
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-*.code-workspace
-
-# Rider specific
-#.idea/ # Uncomment if you use Rider and want to ignore IDE settings
+# Rider specific (Uncomment if you also use Rider)
+#.idea/
 
 # Local History for Visual Studio plugin
 .localhistory/
