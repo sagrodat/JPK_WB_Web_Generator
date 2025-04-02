@@ -7,9 +7,39 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Schemas\ElementarneTypyDanych_v4-0E.xsd" />
+    <None Remove="Schemas\KodyCechKrajow_v3-0E.xsd" />
+    <None Remove="Schemas\KodyKrajow_v4-1E.xsd" />
+    <None Remove="Schemas\KodyUrzedowSkarbowych_v4-0E.xsd" />
+    <None Remove="Schemas\Schemat_JPK_WB%281%29_v1-0.xsd" />
+    <None Remove="Schemas\StrukturyDanych_v4-0E.xsd" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CsvHelper" Version="33.0.1" />
     <PackageReference Include="EPPlus" Version="8.0.1" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Schemas\ElementarneTypyDanych_v4-0E.xsd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\KodyCechKrajow_v3-0E.xsd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\KodyKrajow_v4-1E.xsd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\KodyUrzedowSkarbowych_v4-0E.xsd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\Schemat_JPK_WB(1)_v1-0.xsd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemas\StrukturyDanych_v4-0E.xsd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

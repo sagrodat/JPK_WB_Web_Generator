@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using System.Text; // Potrzebne dla Encoding.UTF8
 using System.Xml.Linq; // Potrzebne dla XDocument
 using System.Xml; // Potrzebne dla XmlWriter
+using System.Xml.Schema;
 
 namespace JpkWebGenerator.Pages // <-- Upewnij się, że poprawny namespace!
 {
@@ -163,6 +164,58 @@ namespace JpkWebGenerator.Pages // <-- Upewnij się, że poprawny namespace!
 
                 try
                 {
+                    // --- POCZĄTEK WALIDACJI XSD ---
+                    Console.WriteLine($"Rozpoczynanie walidacji XSD dla HeaderId={headerId}...");
+                    List<string> xsdValidationErrors = new List<string>(); // Lista na błędy XSD
+                    XDocument docToValidate = XDocument.Parse(generatedXml); // Parsujemy XML do XDocument
+
+                    // Ścieżka do folderu ze schematami (zakładamy folder 'Schemas' w katalogu aplikacji)
+                    string schemaFolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Schemas");
+
+                    // Ładowanie schematów do XmlSchemaSet
+                    XmlSchemaSet schemas = new XmlSchemaSet();
+                    // Upewnij się, że nazwy plików XSD są poprawne!
+                    // Dodajemy główny schemat JPK_WB v1.0 i jego przestrzeń nazw
+                    schemas.Add("http://jpk.mf.gov.pl/wzor/2016/03/09/03092/", Path.Combine(schemaFolderPath, "Schemat_JPK_WB(1)_v1-0.xsd"));
+                    // Dodajemy importowane schematy (sprawdź DOKŁADNE przestrzenie nazw i nazwy plików!)
+                    schemas.Add("http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2016/01/25/eD/DefinicjeTypy/", Path.Combine(schemaFolderPath, "StrukturyDanych_v4-0E.xsd"));
+                    schemas.Add("http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2013/05/23/eD/KodyCECHKRAJOW/", Path.Combine(schemaFolderPath, "KodyCechKrajow_v3-0E.xsd"));
+                    schemas.Add("http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2016/01/25/eD/DefinicjeTypy/", Path.Combine(schemaFolderPath, "ElementarneTypyDanych_v4-0E.xsd"));
+                    schemas.Add("http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2016/01/25/eD/DefinicjeTypy/", Path.Combine(schemaFolderPath, "KodyUrzedowSkarbowych_v4-0E.xsd"));
+                    schemas.Add("http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2016/01/25/eD/DefinicjeTypy/", Path.Combine(schemaFolderPath, "KodyKrajow_v4-1E.xsd"));
+                    // Jeśli StrukturyDanych lub KodyCECHKRAJOW importują inne schematy, je również trzeba dodać do 'schemas.Add(...)'
+
+                    // Definicja handlera błędów walidacji
+                    ValidationEventHandler eventHandler = (sender, e) => {
+                        string errorMsg = $"[XSD {e.Severity}] Linia {e.Exception?.LineNumber}, Poz: {e.Exception?.LinePosition}: {e.Message}";
+                        xsdValidationErrors.Add(errorMsg);
+                        Console.WriteLine(errorMsg); // Logowanie błędu do konsoli serwera
+                    };
+
+                    // Wykonanie walidacji
+                    docToValidate.Validate(schemas, eventHandler);
+
+                    // Sprawdzenie wyniku walidacji XSD
+                    if (xsdValidationErrors.Any()) // Jeśli lista błędów NIE jest pusta
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"Walidacja XSD NIE powiodła się dla HeaderId={headerId}. Liczba błędów: {xsdValidationErrors.Count}");
+                        Console.ResetColor();
+                        // Ustaw komunikat dla użytkownika i przekieruj
+                        TempData["StatusMessage"] = $"Wygenerowany plik XML nie przeszedł walidacji XSD ({xsdValidationErrors.Count} błędów). Plik nie może zostać pobrany. Sprawdź logi serwera po szczegóły.";
+                        TempData["ProcessedHeaderId"] = headerId; // Aby ew. pokazać link do błędów SQL
+                        TempData["ValidationErrorCount"] = xsdValidationErrors.Count; // Możemy tu przekazać liczbę błędów XSD
+                        return RedirectToPage(); // Wróć do strony głównej
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"Walidacja XSD powiodła się dla HeaderId={headerId}.");
+                        Console.ResetColor();
+                        // Walidacja XSD OK - przejdź do zapisu i zwrócenia pliku
+                    }
+                    // --- KONIEC WALIDACJI XSD ---
+
                     // Krok 2: Sparsuj XML do XDocument, aby móc go zapisać z formatowaniem
                     XDocument doc = XDocument.Parse(generatedXml);
 

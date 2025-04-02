@@ -85,3 +85,9 @@ C:\Users\sagro\Desktop\PW\SEM 6\Stodolski\PROJEKT\JpkWebGenerator\JpkWebGenerato
 C:\Users\sagro\Desktop\PW\SEM 6\Stodolski\PROJEKT\JpkWebGenerator\JpkWebGenerator\obj\Debug\net7.0\JpkWebGenerator.pdb
 C:\Users\sagro\Desktop\PW\SEM 6\Stodolski\PROJEKT\JpkWebGenerator\JpkWebGenerator\obj\Debug\net7.0\JpkWebGenerator.genruntimeconfig.cache
 C:\Users\sagro\Desktop\PW\SEM 6\Stodolski\PROJEKT\JpkWebGenerator\JpkWebGenerator\obj\Debug\net7.0\ref\JpkWebGenerator.dll
+C:\Users\sagro\Desktop\PW\SEM 6\Stodolski\PROJEKT\JpkWebGenerator\JpkWebGenerator\bin\Debug\net7.0\Schemas\Schemat_JPK_WB(1)_v1-0.xsd
+C:\Users\sagro\Desktop\PW\SEM 6\Stodolski\PROJEKT\JpkWebGenerator\JpkWebGenerator\bin\Debug\net7.0\Schemas\KodyCechKrajow_v3-0E.xsd
+C:\Users\sagro\Desktop\PW\SEM 6\Stodolski\PROJEKT\JpkWebGenerator\JpkWebGenerator\bin\Debug\net7.0\Schemas\StrukturyDanych_v4-0E.xsd
+C:\Users\sagro\Desktop\PW\SEM 6\Stodolski\PROJEKT\JpkWebGenerator\JpkWebGenerator\bin\Debug\net7.0\Schemas\ElementarneTypyDanych_v4-0E.xsd
+C:\Users\sagro\Desktop\PW\SEM 6\Stodolski\PROJEKT\JpkWebGenerator\JpkWebGenerator\bin\Debug\net7.0\Schemas\KodyKrajow_v4-1E.xsd
+C:\Users\sagro\Desktop\PW\SEM 6\Stodolski\PROJEKT\JpkWebGenerator\JpkWebGenerator\bin\Debug\net7.0\Schemas\KodyUrzedowSkarbowych_v4-0E.xsd

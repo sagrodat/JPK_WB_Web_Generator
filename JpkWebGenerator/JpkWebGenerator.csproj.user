@@ -5,4 +5,30 @@
     <RazorPage_SelectedScaffolderID>RazorPageScaffolder</RazorPage_SelectedScaffolderID>
     <RazorPage_SelectedScaffolderCategoryPath>root/Common/RazorPage</RazorPage_SelectedScaffolderCategoryPath>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Update="Schemas\Schemat_JPK_WB%281%29_v1-0.xsd">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Schemas\KodyCechKrajow_v3-0E.xsd">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Update="Schemas\StrukturyDanych_v4-0E.xsd">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Schemas\ElementarneTypyDanych_v4-0E.xsd">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Schemas\KodyKrajow_v4-1E.xsd">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Update="Schemas\KodyUrzedowSkarbowych_v4-0E.xsd">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
 </Project>
