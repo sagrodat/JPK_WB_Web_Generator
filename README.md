@@ -1,4 +1,4 @@
-# Webowy Generator plików XML zgodnych z JPK_WB - Jakub Klenkiewicz 325484
+# Webowy Generator plików XML zgodnych z JPK_WB - Jakub Klenkiewicz
 
 # 1. Wprowadzenie i Cel Projektu
 
