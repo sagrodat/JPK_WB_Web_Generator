@@ -1,0 +1,76 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Generator JPK_WB</h1>
+    <p>Wybierz plik nagłówkowy i pliki pozycji, aby wygenerować JPK.</p>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="mt-4">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    @* Główny blok wyświetlania komunikatu StatusMessage (jeśli istnieje) *@
+    @* Odczytujemy wartości z TempData bezpośrednio w widoku dla pewności po przekierowaniu *@
+    @{
+        var errorCountFromTempData = TempData["ValidationErrorCount"] as int?;
+        var headerIdFromTempData = TempData["ProcessedHeaderId"] as int?;
+        // Zachowajmy wartości w TempData na wypadek, gdyby były potrzebne niżej
+        if (headerIdFromTempData.HasValue) { TempData.Keep("ProcessedHeaderId"); }
+        if (errorCountFromTempData.HasValue) { TempData.Keep("ValidationErrorCount"); }
+    }
+    @if (!string.IsNullOrEmpty(Model.StatusMessage)) // Model.StatusMessage jest [TempData], więc powinno działać
+    {
+        // Używamy errorCountFromTempData do określenia klasy alertu
+        var alertClass = (errorCountFromTempData ?? -1) == 0 ? "alert-success" : ((errorCountFromTempData ?? -1) > 0 ? "alert-warning" : "alert-danger");
+            <div class="alert @alertClass" role="alert">
+            @Model.StatusMessage
+            </div>
+    }
+
+    @* Pola formularza bez zmian *@
+    <div class="mb-3">
+        <label asp-for="HeaderFile" class="form-label">Plik nagłówkowy (.xlsx, .csv):</label>
+        <input asp-for="HeaderFile" type="file" class="form-control" required>
+        <span asp-validation-for="HeaderFile" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="PositionFiles" class="form-label">Plik(i) pozycji (.xlsx, .csv):</label>
+        <input asp-for="PositionFiles" type="file" class="form-control" multiple required>
+        <span asp-validation-for="PositionFiles" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Przetwórz Pliki</button>
+</form>
+
+@* NOWA SEKCJA: Wyświetlanie linków akcji po przetworzeniu *@
+@if (TempData["ProcessedHeaderId"] != null && TempData["ValidationErrorCount"] != null) // Sprawdzamy TempData
+{
+    var processedId = (int)TempData["ProcessedHeaderId"];
+    var validationErrors = (int)TempData["ValidationErrorCount"];
+
+        <div class="mt-4">
+            <h4>Wyniki Przetwarzania</h4>
+
+        @* Wyświetlanie komunikatu StatusMessage (ponownie, dla pewności) *@
+        @if (validationErrors == 0)
+        {
+                    <p>Kliknij przycisk, aby pobrać gotowy plik JPK_WB.</p>
+            @* Link do handlera OnGetDownloadXmlAsync *@
+                            <a asp-page-handler="DownloadXml" asp-route-headerId="@processedId" class="btn btn-success">
+                        Generuj i Pobierz XML
+                    </a>
+        }
+        else if (validationErrors > 0)
+        {
+                     <p>Znaleziono błędy, które uniemożliwiają wygenerowanie poprawnego pliku XML.</p>
+            @* Link do NOWEJ strony ValidationErrors *@
+                            <a asp-page="/ValidationErrors" asp-route-headerId="@processedId" class="btn btn-warning">
+                                Pokaż Szczegóły Błędów (@validationErrors)
+                    </a>
+        }
+        @* else (errorCountFromTempData < 0) - przypadek błędu krytycznego, komunikat jest już wyświetlony wyżej *@
+
+        </div>
+}
