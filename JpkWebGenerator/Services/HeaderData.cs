@@ -1,7 +1,8 @@
 ﻿// --- START FILE: HeaderData.cs ---
 using System;
 
-namespace JpkWebGenerator.Services
+namespace JpkWebGenerator.Services 
+{
     /// <summary>
     /// Reprezentuje dane wczytane z pliku nagłówkowego JPK_WB.
     /// Zawiera informacje identyfikujące podmiot, jego adres, numer rachunku
