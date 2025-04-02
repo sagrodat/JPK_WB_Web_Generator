@@ -93,6 +93,8 @@ namespace JpkWebGenerator.Pages // <-- Upewnij się, że poprawny namespace!
                 await _dbWriter.EnsureTablesExistAsync();
                // await _dbWriter.ClearDataTablesAsync(); // CZYSZCZENIE
                 HeaderData headerData = _fileReader.ReadHeaderFile(headerTempPath);
+                Console.WriteLine(headerData.KodKraju);
+
                 List<PositionData> positionData = _fileReader.ReadPositionFiles(positionTempPaths);
                 Console.WriteLine("Wczytywanie plików zakończone.");
                 decimal? openingBalance = positionData.Where(p => p.Kwota == null && p.Data != null && p.SaldoKoncowe != null).OrderBy(p => p.Data).FirstOrDefault()?.SaldoKoncowe;
@@ -122,7 +124,40 @@ namespace JpkWebGenerator.Pages // <-- Upewnij się, że poprawny namespace!
                 else { if (string.IsNullOrEmpty(StatusMessage)) StatusMessage = $"Wystąpił nieoczekiwany problem podczas walidacji."; }
             }
             catch (Exception ex) { StatusMessage = $"Wystąpił krytyczny błąd: {ex.Message}"; Console.WriteLine($"KRYTYCZNY BŁĄD w OnPostAsync: {ex}"); ProcessedHeaderId = null; ValidationErrorCount = -1; }
-            finally { /* ... kod sprzątania plików tymczasowych ... */ }
+            finally // Ten blok wykona się ZAWSZE, niezależnie od tego, czy wystąpił błąd w try, czy nie
+            {
+                // --- Sprzątanie Plików Tymczasowych ---
+                Console.WriteLine("\nSprzątanie plików tymczasowych...");
+                // Iterujemy po liście ścieżek do plików, które ZAPISALIŚMY na początku bloku try
+                foreach (var path in tempFilePaths)
+                {
+                    try
+                    {
+                        // Sprawdzamy, czy plik faktycznie istnieje (na wypadek błędu przed jego zapisaniem)
+                        if (System.IO.File.Exists(path))
+                        {
+                            System.IO.File.Delete(path); // Usuwamy plik
+                            Console.WriteLine($"Usunięto plik tymczasowy: {path}");
+                        }
+                    }
+                    catch (IOException ioEx)
+                    {
+                        // W przypadku problemu z usunięciem pliku (np. jest blokowany),
+                        // tylko logujemy ostrzeżenie, ale nie przerywamy działania aplikacji.
+                        // W prawdziwej aplikacji warto to zalogować do systemu logów.
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine($"OSTRZEŻENIE: Nie można usunąć pliku tymczasowego {path}. Błąd: {ioEx.Message}");
+                        Console.ResetColor();
+                    }
+                    catch (Exception cleanupEx) // Inne, nieoczekiwane błędy przy sprzątaniu
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine($"OSTRZEŻENIE: Nieoczekiwany błąd podczas usuwania pliku tymczasowego {path}: {cleanupEx.Message}");
+                        Console.ResetColor();
+                    }
+                }
+                Console.WriteLine("Sprzątanie plików tymczasowych zakończone.");
+            } // Koniec bloku finally
 
             return RedirectToPage();
         }
